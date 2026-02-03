@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
+contract AllowlistNFT is ERC721 {
+    uint256 public nextTokenId;
+    mapping(address => bool) public allowlist;
+
+    constructor() ERC721("VIPNFT", "VIP") {}
+
+    function addToAllowlist(address user) external {
+        // In real life, add onlyOwner restriction here!
+        allowlist[user] = true;
+    }
+
+    function mint() external {
+        require(allowlist[msg.sender], "Not on allowlist");
+        _safeMint(msg.sender, nextTokenId++);
+    }
+}
