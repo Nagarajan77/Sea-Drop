@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/common/ERC2981.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract RoyaltyNFT is ERC721, ERC2981, Ownable {
+    constructor(address initialOwner) ERC721("RoyaltyNFT", "RNFT") Ownable(initialOwner) {
+        // Set default royalty to 5% (500 basis points)
+        _setDefaultRoyalty(initialOwner, 500);
+    }
+
+    function safeMint(address to, uint256 tokenId) public onlyOwner {
+        _safeMint(to, tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC2981)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+}
